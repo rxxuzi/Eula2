@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Base64;
+import java.util.List;
 
 /**
  * <h1>Eula</h1>
@@ -105,6 +106,17 @@ public class Eula implements Serializable{
         EulaFast.encrypt(this.key, file, del);
     }
 
+    public void encrypt(List<File> files, boolean del) throws EulaException {
+        files.parallelStream().forEach(file -> {
+                    try {
+                        EulaFast.encrypt(this.key, file, del);
+                    } catch (EulaException e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
+    }
+
     public void decrypt(SecretKey key, File file, boolean del) throws EulaException {
         EulaFast.decrypt(key, file, del);
     }
@@ -115,6 +127,17 @@ public class Eula implements Serializable{
 
     public void decrypt(String encryptedKey, File file, boolean del) throws EulaException {
         EulaFast.decrypt(this.closeKey(encryptedKey), file, del);
+    }
+
+    public void decrypt(List<File> files, boolean del) throws EulaException {
+        files.parallelStream().forEach(file -> {
+                    try {
+                        EulaFast.encrypt(this.key, file, del);
+                    } catch (EulaException e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
     }
 
     // 公開鍵を共有する
